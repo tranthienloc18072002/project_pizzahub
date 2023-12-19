@@ -23,4 +23,19 @@ public class JwtUtilsHelper {
 
         return jws;
     }
+
+    public boolean verifyToke(String token) {
+        try {
+            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(privateKey));
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
 }

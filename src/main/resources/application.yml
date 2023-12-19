@@ -10,15 +10,18 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
- # servlet:
-#    multipart:
-#      #      Dung l??ng t?i ?a c?a file m� ng??i d�ng c� th? upload
-#      max-file-size: 10MB
+  servlet:
+    multipart:
+      #      Dung l??ng t?i ?a c?a file m� ng??i d�ng c� th? upload
+      max-file-size: 10MB
 #      #      Dung l??ng t?i ?a c?a request ( tham s? ) m� ng??i d�ng truy?n l�n
 #      max-request-size: 10MB
 #
 jwt:
   privateKey: mefSokznDJb5BToiAK6Vre2LB7fI4We3kxoiAd1cq08=
+
+fileUpload:
+  rootPath: D:\project_pizzahub\MyImage
 #
 #upload:
 ##  path: /Users/tranthienloc/Desktop/uploads
