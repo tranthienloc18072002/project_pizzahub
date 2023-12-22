@@ -17,6 +17,9 @@ public class Food {
     @Column(name = "image")
     private String image;
 
+    @Column(name = "is_freeship")
+    private boolean isFreeShip;
+
     @Column(name = "time_ship")
     private String timeShip;
 
@@ -32,6 +35,14 @@ public class Food {
 
     @OneToMany(mappedBy = "food")
     private Set<OrderItem> listOrderItem;
+
+    public boolean isFreeShip() {
+        return isFreeShip;
+    }
+
+    public void setFreeShip(boolean freeShip) {
+        isFreeShip = freeShip;
+    }
 
     public Set<OrderItem> getListOrderItem() {
         return listOrderItem;

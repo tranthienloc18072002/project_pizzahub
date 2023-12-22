@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 @RequestMapping("/restaurant")
 public class RestaurantController {
@@ -21,7 +23,7 @@ public class RestaurantController {
     @Autowired
     RestaurantServiceImp restaurantServiceImp;
 
-    @PostMapping()
+    @PostMapping("")
     public ResponseEntity<?> createRestaurant(
             @RequestParam MultipartFile file,
             @RequestParam String title,
@@ -49,9 +51,9 @@ public class RestaurantController {
     }
 
     @GetMapping("/file/{filename:.+}")
-    public ResponseEntity<?> getFileRestaurant(@PathVariable String fileName) {
+    public ResponseEntity<?> getFileRestaurant(@PathVariable String filename) {
 
-         Resource resource = fileServiceImp.loadFile(fileName);
+         Resource resource = fileServiceImp.loadFile(filename);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
