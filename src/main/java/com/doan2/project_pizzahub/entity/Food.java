@@ -26,6 +26,9 @@ public class Food {
     @Column(name = "price")
     private double price;
 
+    @Column(name = "description")
+    private String desc;
+
     @ManyToOne
     @JoinColumn(name = "cate_id")
     private Category category;
@@ -35,6 +38,14 @@ public class Food {
 
     @OneToMany(mappedBy = "food")
     private Set<OrderItem> listOrderItem;
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
     public boolean isFreeShip() {
         return isFreeShip;

@@ -1,6 +1,10 @@
 package com.doan2.project_pizzahub.service;
 
+import com.doan2.project_pizzahub.dto.CategoryDTO;
+import com.doan2.project_pizzahub.dto.MenuDTO;
 import com.doan2.project_pizzahub.dto.RestaurantDTO;
+import com.doan2.project_pizzahub.entity.Food;
+import com.doan2.project_pizzahub.entity.MenuRestaurant;
 import com.doan2.project_pizzahub.entity.RatingRestaurant;
 import com.doan2.project_pizzahub.entity.Restaurant;
 import com.doan2.project_pizzahub.repository.RestaurantRepository;
@@ -13,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class RestaurantService implements RestaurantServiceImp {
@@ -64,6 +65,7 @@ public class RestaurantService implements RestaurantServiceImp {
 
         for (Restaurant data : listData) {
             RestaurantDTO restaurantDTO = new RestaurantDTO();
+            restaurantDTO.setId(data.getId());
             restaurantDTO.setImage(data.getImage());
             restaurantDTO.setTitle(data.getTitle());
             restaurantDTO.setSubtitle(data.getSubtitle());
@@ -76,7 +78,52 @@ public class RestaurantService implements RestaurantServiceImp {
         return restaurantDTOS;
     }
 
-    //Danh gian san pham
+    @Override
+    public RestaurantDTO getDetailRestaurant(int id) {
+        Optional<Restaurant>  restaurant = restaurantRepository.findById(id);
+        RestaurantDTO restaurantDTO = new RestaurantDTO();
+        if (restaurant.isPresent()) {
+            List<CategoryDTO> categoryDTOList = new ArrayList<>();
+            Restaurant data = restaurant.get();
+
+            restaurantDTO.setTitle(data.getTitle());
+            restaurantDTO.setTitle(data.getSubtitle());
+            restaurantDTO.setTitle(data.getImage());
+            restaurantDTO.setRating(calculatorRating(data.getListRatingRestaurant()));
+            restaurantDTO.setFreeShip(data.isFreeship());
+            restaurantDTO.setDesc(data.getDesc());
+            restaurantDTO.setOpenDate(data.getOpenDate());
+
+            //category
+            for (MenuRestaurant menuRestaurant:data.getListMenuRestaurant()
+                 ) {
+                List<MenuDTO> menuDTOList = new ArrayList<>();
+                CategoryDTO categoryDTO = new CategoryDTO();
+
+                categoryDTO.setName(menuRestaurant.getCategory().getNameCate());
+
+                //menu
+                for (Food food:menuRestaurant.getCategory().getListFood()
+                     ) {
+                    MenuDTO menuDTO = new MenuDTO();
+                    menuDTO.setId(food.getId());
+                    menuDTO.setImage(food.getImage());
+                    menuDTO.setFreeship(food.isFreeShip());
+                    menuDTO.setTitle(food.getTitle());
+                    menuDTO.setDesc(food.getDesc());
+                    menuDTO.setPrice(food.getPrice());
+
+                    menuDTOList.add(menuDTO);
+                }
+                categoryDTO.setMenus(menuDTOList);
+                categoryDTOList.add(categoryDTO);
+            }
+            restaurantDTO.setCategories(categoryDTOList);
+        }
+        return restaurantDTO;
+    }
+
+    //Danh gia so sao san pham
     private double calculatorRating(Set<RatingRestaurant> listRating) {
         double totalPoint = 0;
         for (RatingRestaurant data: listRating
